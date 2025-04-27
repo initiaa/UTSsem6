@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="./resources/ol.css">
+  <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+  <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+  <link rel="stylesheet" href="./resources/qgis2web.css">
+  <title>PETA MITIGASI GEMPA</title>
+
+  <style>
+    html, body {
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+    }
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #34495e;
+      padding: 5px;
+      color: white;
+      overflow-y: auto;
+    }
+    #map {
+      margin-left: 240px;
+      height: 100%;
+      width: calc(100% - 250px);
+    }
+    .ol-control > * {
+      background-color: #f8f8f8 !important;
+      color: #444444 !important;
+      border-radius: 0px;
+    }
+    .ol-control {
+      background-color: rgba(255, 255, 255, 0.4) !important;
+      padding: 2px !important;
+    }
+    .layer-switcher {
+      position: absolute;
+      top: 3.5em;
+      right: 0.5em;
+      text-align: left;
+      z-index: 1001;
+      margin-top: 8px;
+      margin-right: 8px;
+      padding: 3px;
+      background-color: rgba(255, 255, 255, 0.4) !important;
+    }
+    .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+      color: #444444 !important;
+    }
+    .search-layer-input-search {
+      background-color: #f8f8f8 !important;
+    }
+    .section button {
+      width: 100%;
+      background-color: #34495e;
+      color: white;
+      border: none;
+      padding: 12px;
+      text-align: left;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    .section button:hover {
+      background-color: #1abc9c;
+    }
+    .section button::before {
+      content: "\2022";
+      font-size: 20px;
+      margin-right: 10px;
+      color: #1abc9c;
+    }
+    .content {
+      display: none;
+      margin-top: 10px;
+      padding-left: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      background-color: #34495e;
+      border-radius: 5px;
+    }
+    .content.open {
+      display: block;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    .table-container {
+      position: absolute;
+      bottom: 0;
+      left: 240px;
+      width: calc(100% - 250px);
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+      overflow-x: auto;
+      max-height: 300px;
+      z-index: 1000;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .toggle-table-btn {
+      margin-top: 10px;
+      background-color: #34495e;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      border-radius: 5px;
+    }
+    .toggle-table-btn:hover {
+      background-color: #1abc9c;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="sidebar">
+    <div class="section">
+      <button onclick="toggleContent(this)">Biodata</button>
+      <div class="content">
+        <p>Judul : Peta Mitigasi Gempa</p>
+        <p>Nama kelompok : kelompok 1</p>
+        <p>anggota :
+          <br>Sulistia Ningsih (2022610009)
+          <br>Lira Irawan (2022610015)
+          <br>Diana Olivia (2022610047)
+        </p>
+      </div>
+    </div>
+    <div class="section">
+      <button onclick="toggleContent(this)">Hasil Analisa</button>
+      <div class="content">
+        <p>Dapat dilihat dari gambar di atas bahwa daerah dan fasilitas yang terkena dampak gempa. Dari data yang didapat, seluruh fasilitas yang ada di wilayah Kepulauan Mentawai seperti pelabuhan, SPBU, sekolah, rumah sakit, tempat ibadah, dan bangunan lainnya berada dalam radius terdampak gempa (GIS.com, 2022). Analisis ini dilakukan dengan menggunakan buffer pada layer titik gempa, sehingga dapat diidentifikasi fasilitas-fasilitas mana saja yang berpotensi mengalami kerusakan.</p>
+      </div>
+    </div>
+    <div class="section">
+      <button onclick="toggleContent(this)">Keterangan Project</button>
+      <div class="content">
+        <p>Project ini bertujuan untuk menganalisis potensi dampak gempa bumi terhadap fasilitas umum di wilayah Sumatra Barat, khususnya di daerah Kepulauan Mentawai dan sekitarnya. Data gempa yang diperoleh diproses menggunakan QGIS dengan bantuan Geoprocessing Tools seperti Buffer dan analisis jarak untuk mengidentifikasi fasilitas-fasilitas vital (seperti pelabuhan, SPBU, sekolah, rumah sakit, dan tempat ibadah) yang berada dalam radius terdampak aktivitas gempa. Peta hasil analisis menunjukkan wilayah rentan beserta fasilitas di dalamnya, yang dapat dijadikan acuan untuk rencana mitigasi bencana dan evakuasi.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="map">
+    <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+      <div id="popup-content"></div>
+    </div>
+  </div>
+
+  <div id="attribute-table" class="table-container">
+    <button class="toggle-table-btn" onclick="toggleTable()">Tabel Penduduk</button>
+    <div id="data-table" style="display:none;">
+      <table>
+        <thead>
+          <tr>
+            <th>Kecamatan</th>
+            <th>Laki-laki (2021)</th>
+            <th>Perempuan (2021)</th>
+            <th>Jumlah (2021)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Pagai Selatan</td><td>4895</td><td>4490</td><td>9385</td></tr>
+          <tr><td>Sikakap</td><td>5309</td><td>4927</td><td>10236</td></tr>
+          <tr><td>Pagai Utara</td><td>3174</td><td>2912</td><td>6086</td></tr>
+          <tr><td>Sipora Selatan</td><td>5101</td><td>4802</td><td>9903</td></tr>
+          <tr><td>Sipora Utara</td><td>6292</td><td>5936</td><td>12228</td></tr>
+          <tr><td>Siberut Selatan</td><td>5171</td><td>4868</td><td>10039</td></tr>
+          <tr><td>Siberut Barat Daya</td><td>3736</td><td>3390</td><td>7126</td></tr>
+          <tr><td>Siberut Tengah</td><td>3715</td><td>3445</td><td>7160</td></tr>
+          <tr><td>Siberut Utara</td><td>4365</td><td>3986</td><td>8351</td></tr>
+          <tr><td>Siberut Barat</td><td>4133</td><td>3742</td><td>7875</td></tr>
+          <tr><td>Kepulauan Mentawai</td><td>45891</td><td>42498</td><td>88389</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Load semua library dan layers -->
+  <script src="resources/qgis2web_expressions.js"></script>
+  <script src="./resources/functions.js"></script>
+  <script src="./resources/ol.js"></script>
+  <script src="./resources/ol-layerswitcher.js"></script>
+  <script src="layers/hasil67KM_1.js"></script>
+  <script src="layers/BATASKABUPATENKOTADESEMBER2019DUKCAPIL_2.js"></script>
+  <script src="layers/HistoriesGempa_3.js"></script>
+  <script src="layers/PATAHAN_4.js"></script>
+  <script src="layers/RUMAHSAKIT_5.js"></script>
+  <script src="layers/GEMPA_6.js"></script>
+  <script src="layers/BANGUNAN_7.js"></script>
+  <script src="layers/geo_8.js"></script>
+  <script src="layers/TEMPATIBADAH_9.js"></script>
+  <script src="layers/SEKOLAHTK_10.js"></script>
+  <script src="layers/SEKOLAHSMP_11.js"></script>
+  <script src="layers/SEKOLAHSMA_12.js"></script>
+  <script src="layers/SEKOLAHSD_13.js"></script>
+  <script src="layers/SPBU_14.js"></script>
+  <script src="layers/PELABUHAN_15.js"></script>
+
+  <script src="styles/hasil67KM_1_style.js"></script>
+  <script src="styles/BATASKABUPATENKOTADESEMBER2019DUKCAPIL_2_style.js"></script>
+  <script src="styles/HistoriesGempa_3_style.js"></script>
+  <script src="styles/PATAHAN_4_style.js"></script>
+  <script src="styles/RUMAHSAKIT_5_style.js"></script>
+  <script src="styles/GEMPA_6_style.js"></script>
+  <script src="styles/BANGUNAN_7_style.js"></script>
+  <script src="styles/geo_8_style.js"></script>
+  <script src="styles/TEMPATIBADAH_9_style.js"></script>
+  <script src="styles/SEKOLAHTK_10_style.js"></script>
+  <script src="styles/SEKOLAHSMP_11_style.js"></script>
+  <script src="styles/SEKOLAHSMA_12_style.js"></script>
+  <script src="styles/SEKOLAHSD_13_style.js"></script>
+  <script src="styles/SPBU_14_style.js"></script>
+  <script src="styles/PELABUHAN_15_style.js"></script>
+
+  <script src="./layers/layers.js"></script>
+  <script src="./resources/Autolinker.min.js"></script>
+  <script src="./resources/qgis2web.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var layerSwitcher = new ol.control.LayerSwitcher({
+        activationMode: 'click',
+        startActive: false,
+        tipLabel: 'Legend',
+        groupSelectStyle: 'children'
+      });
+      map.addControl(layerSwitcher);
+    });
+
+    function toggleContent(button) {
+      var content = button.nextElementSibling;
+      content.classList.toggle('open');
+    }
+
+    function toggleTable() {
+      var table = document.getElementById("data-table");
+      if (table.style.display === "none" || table.style.display === "") {
+        table.style.display = "block";
+      } else {
+        table.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
